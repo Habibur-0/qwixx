@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import {
   StyleSheet, Text, View, TextInput, TouchableOpacity,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import globalStyles from '../styles/Global';
 
