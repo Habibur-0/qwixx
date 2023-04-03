@@ -32,16 +32,16 @@ export default class WelcomeScreen extends Component {
 
             <View style={styles.ButtonLayout}>
 
-                     <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Main')}>
+                     <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('TwoPlayers')}>
                         <Text style={styles.buttonText}>2 Players</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Main')}>
+                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('ThreePlayers')}>
                         <Text style={styles.buttonText}>3 Players</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Main')}>
+                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('FourPlayers')}>
                         <Text style={styles.buttonText}>4 Players</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Main')}>
+                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('FivePlayers')}>
                         <Text style={styles.buttonText}>5 Players</Text>
                     </TouchableOpacity>
 

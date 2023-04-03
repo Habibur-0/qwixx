@@ -1,0 +1,318 @@
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faDice } from '@fortawesome/free-solid-svg-icons';
+
+
+
+class AnimatedDice extends Component {
+  state = {
+    rotation: new Animated.Value(0),
+    value: 'roll',
+  };
+
+  animateDice = () => {
+    Animated.timing(this.state.rotation, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      const value = Math.floor(Math.random() * 6) + 1;
+      this.setState({ value });
+      this.state.rotation.setValue(0);
+    });
+  };
+
+  getDiceColor = () => {
+    const { index } = this.props;
+    switch (index) {
+      case 0:
+        return styles.redDice;
+      case 1:
+        return styles.yellowDice;
+      case 2:
+        return styles.greenDice;
+      case 3:
+        return styles.blueDice;
+      case 4:
+      case 5:
+        return styles.whiteDice;
+      default:
+        return {};
+    }
+};
+
+
+render() {
+        const { rotation, value } = this.state;
+      const animatedStyle = {
+      transform: [
+      {
+      rotate: this.state.rotation.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+            }),
+          },
+        ],
+      };
+          return (
+          <TouchableOpacity style={[styles.dice, this.getDiceColor()]} onPress={this.animateDice}>
+            <Animated.View style={[animatedStyle]}>
+            <FontAwesomeIcon icon={faDice} size={30} color={'#000'} />
+            </Animated.View>
+            <Text style={styles.value}>{value}</Text>
+          </TouchableOpacity>
+          );
+}
+}
+
+class DiceRow extends Component {
+  render() {
+    return (
+      <View style={styles.diceRow}>
+        {[...Array(6)].map((_, i) => (
+          <AnimatedDice key={i} index={i} />
+        ))}
+      </View>
+    );
+  }
+}
+
+
+
+
+export default class QwixxBoard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      checkboxes: [[false, false], [false, false]],
+    };
+  }
+
+  handleCheckboxPress(row, col) {
+    const checkboxes = [...this.state.checkboxes];
+    checkboxes[row][col] = !checkboxes[row][col];
+    this.setState({ checkboxes });
+  }
+
+
+  render() {
+    return (
+      <View style={styles.container}>
+
+        <View style={[styles.row, styles.redRow]}>
+          {[...Array(11)].map((_, i) => (
+            <TouchableOpacity key={i} style={styles.number}>
+              <Text style={{ fontSize: 20, color: '#D82E3F', fontWeight: 'bold' }}>{i + 2}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={[styles.number, {backgroundColor: '#D82E3F'}]}></TouchableOpacity>
+          <TouchableOpacity style={styles.lockIcon}>
+            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.row, styles.yellowRow]}>
+          {[...Array(11)].map((_, i) => (
+            <TouchableOpacity key={i} style={styles.number}>
+              <Text style={{ fontSize: 20, color: '#f7d511', fontWeight: 'bold' }}>{i + 2}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={[styles.number, {backgroundColor: '#f7d511'}]}></TouchableOpacity>
+          <TouchableOpacity style={styles.lockIcon}>
+            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.row, styles.greenRow]}>
+          {[...Array(11)].map((_, i) => (
+            <TouchableOpacity key={i} style={styles.number}>
+              <Text style={{ fontSize: 20, color: '#28CC2D', fontWeight: 'bold' }}>{12 - i}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={[styles.number, {backgroundColor: '#28CC2D'}]}></TouchableOpacity>
+          <TouchableOpacity style={styles.lockIcon}>
+            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.row, styles.blueRow]}>
+          {[...Array(11)].map((_, i) => (
+            <TouchableOpacity key={i} style={styles.number}>
+              <Text style={{ fontSize: 20, color: '#3581D8', fontWeight: 'bold' }}>{12 - i}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={[styles.number, {backgroundColor: '#3581D8'}]}></TouchableOpacity>
+          
+          <TouchableOpacity style={styles.lockIcon}>
+            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
+          </TouchableOpacity>
+        </View>
+
+        <DiceRow />
+
+
+        <View style={styles.checkboxContainer}>
+          <View style={styles.checkboxRow}>
+            <TouchableOpacity
+              style={[styles.checkbox, { backgroundColor: this.state.checkboxes[0][0] ? '#000' : '#fff' }]}
+              onPress={() => this.handleCheckboxPress(0, 0)}
+            ></TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.checkbox, { backgroundColor: this.state.checkboxes[0][1] ? '#000' : '#fff' }]}
+              onPress={() => this.handleCheckboxPress(0, 1)}
+              ></TouchableOpacity>
+              </View>
+              <View style={styles.checkboxRow}>
+              <TouchableOpacity
+              style={[styles.checkbox, { backgroundColor: this.state.checkboxes[1][0] ? '#000' : '#fff' }]}
+              onPress={() => this.handleCheckboxPress(1, 0)}
+              ></TouchableOpacity>
+              <TouchableOpacity
+              style={[styles.checkbox, { backgroundColor: this.state.checkboxes[1][1] ? '#000' : '#fff' }]}
+              onPress={() => this.handleCheckboxPress(1, 1)}
+              ></TouchableOpacity>
+              </View>
+              </View>
+
+
+      </View>
+    );
+  }
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'center',
+    backgroundColor: '#63CAD8', 
+  },
+  diceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // marginBottom: 5,
+    marginTop: 5,
+
+  },
+  dice: {
+    marginRight: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // marginBottom: 10,
+  },
+  number: {
+    width: 50,
+    height: 50,
+    borderRadius: 9,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    },
+  lockIcon: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: '#555',
+    padding: 5,
+    borderRadius: 5,
+    },
+   yellowRow: {
+    backgroundColor: '#f7d511',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  greenRow: {
+    backgroundColor: '#28CC2D',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  redRow: {
+    backgroundColor: '#D82E3F',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  blueRow: {
+    backgroundColor: '#3581D8',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  colorBox: {
+    backgroundColor: '#63CAD8',
+    height: '100%',
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    },
+  dice: {
+      width: 50,
+      height: 50,
+      borderRadius: 9,
+      backgroundColor: '#ddd',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    diceValue: {
+      fontSize: 40,
+      fontWeight: 'bold',
+    },
+    redDice: {
+      backgroundColor: '#D82E3F',
+    },
+    yellowDice: {
+      backgroundColor: '#f7d511',
+    },
+    greenDice: {
+      backgroundColor: '#28CC2D',
+    },
+    blueDice: {
+      backgroundColor: '#1F8FFE',
+    },
+    whiteDice: {
+      backgroundColor: 'white',
+    },
+    diceContainer: {
+      marginRight: 5,
+      width: 50,
+    },
+    checkboxContainer: {
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      },
+      checkbox: {
+      width: 20,
+      height: 20,
+      borderWidth: 1,
+      borderColor: '#000',
+      borderRadius: 3,
+      marginRight: 10,
+      },
+      checkboxRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+      },
+
+  });
