@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { faDice } from '@fortawesome/free-solid-svg-icons';
 
-
-
 class AnimatedDice extends Component {
   state = {
     rotation: new Animated.Value(0),
@@ -83,6 +81,7 @@ class DiceRow extends Component {
 
 
 export default class QwixxBoard extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -95,7 +94,6 @@ export default class QwixxBoard extends Component {
     checkboxes[row][col] = !checkboxes[row][col];
     this.setState({ checkboxes });
   }
-
 
   render() {
     return (

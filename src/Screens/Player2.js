@@ -4,7 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { faDice } from '@fortawesome/free-solid-svg-icons';
 
-
+const colors = {
+  red: '#D82E3F',
+  yellow: '#f7d511',
+  green: '#28CC2D',
+  blue: '#3581D8',
+};
 
 class AnimatedDice extends Component {
   state = {
@@ -41,30 +46,29 @@ class AnimatedDice extends Component {
       default:
         return {};
     }
-};
+  };
 
-
-render() {
-        const { rotation, value } = this.state;
-      const animatedStyle = {
+  render() {
+    const { rotation, value } = this.state;
+    const animatedStyle = {
       transform: [
-      {
-      rotate: this.state.rotation.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-            }),
-          },
-        ],
-      };
-          return (
-          <TouchableOpacity style={[styles.dice, this.getDiceColor()]} onPress={this.animateDice}>
-            <Animated.View style={[animatedStyle]}>
-            <FontAwesomeIcon icon={faDice} size={30} color={'#000'} />
-            </Animated.View>
-            <Text style={styles.value}>{value}</Text>
-          </TouchableOpacity>
-          );
-}
+        {
+          rotate: this.state.rotation.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '360deg'],
+          }),
+        },
+      ],
+    };
+    return (
+      <TouchableOpacity style={[styles.dice, this.getDiceColor()]} onPress={this.animateDice}>
+        <Animated.View style={[animatedStyle]}>
+          <FontAwesomeIcon icon={faDice} size={30} color={'#000'} />
+        </Animated.View>
+        <Text style={styles.value}>{value}</Text>
+      </TouchableOpacity>
+    );
+  }
 }
 
 class DiceRow extends Component {
@@ -78,70 +82,61 @@ class DiceRow extends Component {
     );
   }
 }
-
-
-
-
 export default class QwixxBoard extends Component {
+  state = {
+    rows: [
+      { color: 'red', selectedNumbers: [] },
+      { color: 'yellow', selectedNumbers: [] },
+      { color: 'green', selectedNumbers: [] },
+      { color: 'blue', selectedNumbers: [] },
+    ],
+  };
+
+  handleNumberPress = (number, rowIndex) => {
+    this.setState((prevState) => {
+      const newRows = [...prevState.rows];
+      newRows[rowIndex].selectedNumbers.push(number);
+      return { rows: newRows };
+    });
+  };
+
+  isNumberSelected = (number, rowIndex) => {
+    return this.state.rows[rowIndex].selectedNumbers.includes(number);
+  };
+
   render() {
     return (
       <View style={styles.container}>
 
-        <View style={[styles.row, styles.redRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={styles.number}>
-              <Text style={{ fontSize: 20, color: '#D82E3F', fontWeight: 'bold' }}>{i + 2}</Text>
+        {this.state.rows.map((row, index) => (
+          <View key={index} style={[styles.row, styles[`${row.color}Row`]]}>
+            {[...Array(11)].map((_, i) => (
+              <TouchableOpacity
+                key={i}
+                style={[
+                  styles.number,
+                  { backgroundColor: this.isNumberSelected(i + 2, index) ? '#000' : colors[row.color] },
+                ]}
+                onPress={() => this.handleNumberPress(i + 2, index)}
+              >
+                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{row.color === 'red' ? i + 2 : 12 - i}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={[styles.number, { backgroundColor: colors[row.color] }]}></TouchableOpacity>
+            <TouchableOpacity style={styles.lockIcon}>
+              <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#D82E3F'}]}></TouchableOpacity>
-          <TouchableOpacity style={styles.lockIcon}>
-            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={[styles.row, styles.yellowRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={styles.number}>
-              <Text style={{ fontSize: 20, color: '#f7d511', fontWeight: 'bold' }}>{i + 2}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#f7d511'}]}></TouchableOpacity>
-          <TouchableOpacity style={styles.lockIcon}>
-            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={[styles.row, styles.greenRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={styles.number}>
-              <Text style={{ fontSize: 20, color: '#28CC2D', fontWeight: 'bold' }}>{12 - i}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#28CC2D'}]}></TouchableOpacity>
-          <TouchableOpacity style={styles.lockIcon}>
-            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={[styles.row, styles.blueRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={styles.number}>
-              <Text style={{ fontSize: 20, color: '#3581D8', fontWeight: 'bold' }}>{12 - i}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#3581D8'}]}></TouchableOpacity>
-          
-          <TouchableOpacity style={styles.lockIcon}>
-            <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-        </View>
-
+          </View>
+        ))}
+        
         <DiceRow />
-
       </View>
     );
   }
 }
+
+
+
 
 const styles = StyleSheet.create({
   container: {

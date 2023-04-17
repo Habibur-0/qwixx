@@ -23,10 +23,10 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ThreePlayers" component={ThreePlayers} />
+      <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Main" component={MainScreen} />
-        <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
-        <Stack.Screen name="ThreePlayers" component={ThreePlayers} />
         <Stack.Screen name="FourPlayers" component={FourPlayers} />
         <Stack.Screen name="FivePlayers" component={FivePlayers} />
       </Stack.Navigator>
