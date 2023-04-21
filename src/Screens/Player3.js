@@ -4,6 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { faDice } from '@fortawesome/free-solid-svg-icons';
 
+const colors = {
+  red: '#D82E3F',
+  yellow: '#f7d511',
+  green: '#28CC2D',
+  blue: '#3581D8',
+};
+
 class AnimatedDice extends Component {
   state = {
     rotation: new Animated.Value(0),
@@ -46,7 +53,7 @@ class AnimatedDice extends Component {
     const animatedStyle = {
       transform: [
         {
-          rotate: this.state.rotation.interpolate({
+          rotate: this.state.rotation.interpolate({ 
             inputRange: [0, 1],
             outputRange: ['0deg', '360deg'],
           }),
@@ -62,7 +69,7 @@ class AnimatedDice extends Component {
       </TouchableOpacity>
     );
   }
-}
+}// end if diceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 
 class DiceRow extends Component {
   render() {
@@ -75,88 +82,87 @@ class DiceRow extends Component {
     );
   }
 }
-
 export default class QwixxBoard extends Component {
   state = {
-    selectedNumbers: [],
+    rows: [
+      { color: 'red', selectedNumbers: [], redCount: 0 },
+      { color: 'yellow', selectedNumbers: [], yellowCount: 0 },
+      { color: 'green', selectedNumbers: [], greenCount: 0 },
+      { color: 'blue', selectedNumbers: [], blueCount: 0 },
+    ],
+    moves: 0,
+    selectedCount: 0,
   };
 
-  handleNumberPress = (number) => {
-    this.setState((prevState) => ({
-      selectedNumbers: [...prevState.selectedNumbers, number],
-    }));
+  handleNumberPress = (number, rowIndex) => {
+    if (this.state.selectedCount >= 2) {
+      return;
+    }
+
+    this.setState((prevState) => {
+      const newRows = [...prevState.rows];
+      const row = newRows[rowIndex];
+      row.selectedNumbers.push(number);
+
+      // Highlight numbers to the left in a different color
+      for (let i = 0; i < number - 2; i++) {
+        row.selectedNumbers.push(i + 2);
+      }
+
+      const newSelectedCount = prevState.selectedCount + 1;
+
+      return { rows: newRows, selectedCount: newSelectedCount };
+    });
   };
 
-  isNumberSelected = (number) => {
-    return this.state.selectedNumbers.includes(number);
+  isNumberSelected = (number, rowIndex) => {
+    return this.state.rows[rowIndex].selectedNumbers.includes(number);
   };
 
+  handleEndTurn = () => {
+    // Add 2 moves and reset selected count
+    this.setState((prevState) => {
+      return { selectedCount: 0, moves: prevState.moves + 2 };
+    });
+  };
+  
   render() {
     return (
       <View style={styles.container}>
-
-
-        <View style={[styles.row, styles.redRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={[styles.number,{ backgroundColor: this.isNumberSelected(i + 2) ? '#000' : '#D82E3F' },]}
-              onPress={() => this.handleNumberPress(i + 2)}
-            >
-              <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{i + 2}</Text>
+        {this.state.rows.map((row, index) => (
+          <View key={index} style={[styles.row, styles[`${row.color}Row`]]}>
+            {[...Array(11)].map((_, i) => (
+              <TouchableOpacity
+                key={i}
+                style={[
+                  styles.number,
+                  { backgroundColor: this.isNumberSelected(i + 2, index) ? '#000' : colors[row.color] },
+                ]}
+                onPress={() => this.handleNumberPress(i + 2, index)}
+                disabled={this.state.selectedCount >= 2 && !this.isNumberSelected(i + 2, index)}
+              >
+                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>
+                  {row.color === 'red' || row.color === 'yellow' ? i + 2 : 12 - i}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={[styles.number, { backgroundColor: colors[row.color] }]}></TouchableOpacity>
+            <TouchableOpacity style={styles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
+              <FontAwesomeIcon icon={faLock} color="#000" size={60} />
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#D82E3F'}]}></TouchableOpacity>
-           <TouchableOpacity style={styles.lockIcon}>
-             <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
+          </View>
+        ))}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.endTurnButton} onPress={this.handleEndTurn}>
+            <Text style={styles.endTurnButtonText}>End Turn</Text>
           </TouchableOpacity>
-    </View>
-
-    <View style={[styles.row, styles.yellowRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={[styles.number,{ backgroundColor: this.isNumberSelected(i + 2) ? '#000' : '#f7d511' },]}
-              onPress={() => this.handleNumberPress(i + 2)}
-            >
-              <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{i + 2}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#f7d511'}]}></TouchableOpacity>
-           <TouchableOpacity style={styles.lockIcon}>
-             <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-    </View>
-
-    <View style={[styles.row, styles.greenRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={[styles.number,{ backgroundColor: this.isNumberSelected(i + 2) ? '#000' : '#28CC2D' },]}
-              onPress={() => this.handleNumberPress(i + 2)}
-            >
-              <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{12 - i}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#28CC2D'}]}></TouchableOpacity>
-           <TouchableOpacity style={styles.lockIcon}>
-             <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-    </View>
-
-    <View style={[styles.row, styles.blueRow]}>
-          {[...Array(11)].map((_, i) => (
-            <TouchableOpacity key={i} style={[styles.number,{ backgroundColor: this.isNumberSelected(i + 2) ? '#000' : '#3581D8' },]}
-              onPress={() => this.handleNumberPress(i + 2)}
-            >
-              <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{12 - i}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={[styles.number, {backgroundColor: '#3581D8'}]}></TouchableOpacity>
-           <TouchableOpacity style={styles.lockIcon}>
-             <FontAwesomeIcon icon={faLock} color="#fff" size={60} />
-          </TouchableOpacity>
-    </View>
-    <DiceRow />
-
-     </View>
-);
+          <DiceRow />
+        </View>
+      </View>
+    );
+  }
 }
-}
+
 
 
 
@@ -174,6 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // marginBottom: 5,
     marginTop: 5,
+    marginRight: 50,
 
   },
   dice: {
@@ -197,7 +204,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    backgroundColor: '#555',
+    // backgroundColor: '#red',
     padding: 5,
     borderRadius: 5,
     },
@@ -271,6 +278,30 @@ const styles = StyleSheet.create({
     diceContainer: {
       marginRight: 5,
       width: 50,
+    },
+    endTurnButton: {
+      backgroundColor: '#000',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      marginRight: 65,
+    },
+    endTurnButtonText: {
+      color: '#fff',
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    buttonRow: {
+      flexDirection: 'row',
+      // marginTop: 16,
+      alignItems: 'center',
+      justifyContent: 'flex-start', // Update this to 'flex-start'
+    },
+    score: {
+      fontSize: 50,
+      fontWeight: 'bold',
+      marginLeft: 'auto',
+      marginRight: 65,
     },
 
   });
