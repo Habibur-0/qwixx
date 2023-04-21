@@ -46,8 +46,9 @@ function TwoPlayers() {
 function ThreePlayers() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Player1" component={Player1} />
       <Tab.Screen name="Player2" component={Player2} />
+      <Tab.Screen name="Player1" component={Player1} />
+
       <Tab.Screen name="Player3" component={Player3} />
     </Tab.Navigator>
   );
