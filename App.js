@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import WelcomeScreen from './src/Screens/Welcome';
 import MainScreen from './src/Screens/Main';
+import EndScreen from './src/Screens/End';
 
 import Player1 from './src/Screens/Player1';
 import Player2 from './src/Screens/Player2';
@@ -23,12 +24,15 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ThreePlayers" component={ThreePlayers} />
-      <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="FivePlayers" component={FivePlayers} />
+
+      <Stack.Screen name="End" component={EndScreen} />
+
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="ThreePlayers" component={ThreePlayers} />
+        <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
         <Stack.Screen name="FourPlayers" component={FourPlayers} />
-        <Stack.Screen name="FivePlayers" component={FivePlayers} />
+        <Stack.Screen name="Main" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

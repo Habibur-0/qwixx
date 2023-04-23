@@ -17,7 +17,6 @@ export default class WelcomeScreen extends Component {
 
   }
 
-
   render() {
     const { navigation } = this.props;
 
@@ -49,7 +48,6 @@ export default class WelcomeScreen extends Component {
             </View>
 
 
-        
 
       </View>
 
