@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { faDice } from '@fortawesome/free-solid-svg-icons';
+
 
 const colors = {
   red: '#D82E3F',
@@ -11,77 +11,6 @@ const colors = {
   blue: '#3581D8',
 };
 
-class AnimatedDice extends Component {
-  state = {
-    rotation: new Animated.Value(0),
-    value: 'roll',
-  };
-
-  animateDice = () => {
-    Animated.timing(this.state.rotation, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start(() => {
-      const value = Math.floor(Math.random() * 6) + 1;
-      this.setState({ value });
-      this.state.rotation.setValue(0);
-    });
-  };
-
-  getDiceColor = () => {
-    const { index } = this.props;
-    switch (index) {
-      case 0:
-        return styles.redDice;
-      case 1:
-        return styles.yellowDice;
-      case 2:
-        return styles.greenDice;
-      case 3:
-        return styles.blueDice;
-      case 4:
-      case 5:
-        return styles.whiteDice;
-      default:
-        return {};
-    }
-  };
-
-  render() {
-    const { rotation, value } = this.state;
-    const animatedStyle = {
-      transform: [
-        {
-          rotate: this.state.rotation.interpolate({ 
-            inputRange: [0, 1],
-            outputRange: ['0deg', '360deg'],
-          }),
-        },
-      ],
-    };
-    return (
-      <TouchableOpacity style={[styles.dice, this.getDiceColor()]} onPress={this.animateDice}>
-        <Animated.View style={[animatedStyle]}>
-          <FontAwesomeIcon icon={faDice} size={30} color={'#000'} />
-        </Animated.View>
-        <Text style={styles.value}>{value}</Text>
-      </TouchableOpacity>
-    );
-  }
-}// end if diceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-
-class DiceRow extends Component {
-  render() {
-    return (
-      <View style={styles.diceRow}>
-        {[...Array(6)].map((_, i) => (
-          <AnimatedDice key={i} index={i} />
-        ))}
-      </View>
-    );
-  }
-}
 export default class QwixxBoard extends Component {
   state = {
     rows: [
@@ -93,6 +22,40 @@ export default class QwixxBoard extends Component {
     moves: 0,
     selectedCount: 0,
   };
+
+  componentDidMount() {
+    const { lockStatuses } = this.props.route.params;
+    console.log(lockStatuses); // log the lock status array to the console
+    let endgame = 0;
+    console.log(endgame); // log the lock status array to the console
+
+    const { navigation } = this.props;
+  
+    if(lockStatuses[0] === true){
+      this.handleLockPress(12, 0);
+      endgame++;
+    }
+    if (lockStatuses[1] === true){
+      this.handleLockPress(12, 1);
+      endgame++;
+    }
+    if (lockStatuses[2] === true){
+      this.handleLockPress(12, 2);
+      endgame++;
+    }
+    if (lockStatuses[3] === true){
+      this.handleLockPress(12, 3);
+      endgame++;
+    }
+  
+    if (endgame>=2){
+      navigation.navigate('End');
+    }
+  }
+  
+
+
+
 
   handleNumberPress = (number, rowIndex) => {
     if (this.state.selectedCount >= 2) {
@@ -115,18 +78,42 @@ export default class QwixxBoard extends Component {
     });
   };
 
+  handleLockPress = (number, rowIndex) => {
+    this.setState((prevState) => {
+      const newRows = [...prevState.rows];
+      newRows[rowIndex].selectedNumbers.push(number);
+      // Highlight numbers to the left in a different color
+      for (let i = 0; i < number - 2; i++) {
+        newRows[rowIndex].selectedNumbers.push(i + 2);
+      }
+  
+      return { rows: newRows };
+    });
+  };
+
+
+  
+
   isNumberSelected = (number, rowIndex) => {
     return this.state.rows[rowIndex].selectedNumbers.includes(number);
   };
 
   handleEndTurn = () => {
+    const { navigation } = this.props;
     // Add 2 moves and reset selected count
     this.setState((prevState) => {
       return { selectedCount: 0, moves: prevState.moves + 2 };
     });
+    
+    // Construct an array of lock statuses for each row
+    const lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
+    
+    navigation.navigate('Player4', { lockStatuses });
   };
   
   render() {
+
+  
     return (
       <View style={styles.container}>
         {this.state.rows.map((row, index) => (
@@ -141,31 +128,41 @@ export default class QwixxBoard extends Component {
                 onPress={() => this.handleNumberPress(i + 2, index)}
                 disabled={this.state.selectedCount >= 2 && !this.isNumberSelected(i + 2, index)}
               >
-                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>
-                  {row.color === 'red' || row.color === 'yellow' ? i + 2 : 12 - i}
-                </Text>
+                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{row.color === 'red' || row.color === 'yellow' ? i + 2 : 12 - i}</Text>
               </TouchableOpacity>
             ))}
+
+
             <TouchableOpacity style={[styles.number, { backgroundColor: colors[row.color] }]}></TouchableOpacity>
-            <TouchableOpacity style={styles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
-              <FontAwesomeIcon icon={faLock} color="#000" size={60} />
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
+                <FontAwesomeIcon icon={faLock} color="#000" size={60} />
+              </TouchableOpacity>
+
+            {/* {lockStatuses[index].lockStatuses ?
+              this.handleLockPress(12, index)
+              :null
+            } */}
+
+            {/* {lockStatuses[index].lockStatuses ?
+              <Text>{lockStatuses}</Text>
+            } */}
+
+
+
+
+
           </View>
         ))}
-        <View style={styles.buttonRow}>
+        <View style = {styles.buttonRow}>
           <TouchableOpacity style={styles.endTurnButton} onPress={this.handleEndTurn}>
             <Text style={styles.endTurnButtonText}>End Turn</Text>
           </TouchableOpacity>
-          <DiceRow />
         </View>
       </View>
     );
   }
+  
 }
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {
