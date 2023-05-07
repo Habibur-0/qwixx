@@ -10,16 +10,12 @@ import globalStyles from '../styles/Global';
 export default class WelcomeScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      numberOfPlayers:'',
     };
-
   }
 
   render() {
     const { navigation } = this.props;
-
     return (
       <View style={globalStyles.container}>
 
@@ -28,9 +24,7 @@ export default class WelcomeScreen extends Component {
           <Text style={styles.headerTitle}>Qwixx</Text>
         </View>
 
-
             <View style={styles.ButtonLayout}>
-
                      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('TwoPlayers')}>
                         <Text style={styles.buttonText}>2 Players</Text>
                     </TouchableOpacity>
@@ -43,14 +37,8 @@ export default class WelcomeScreen extends Component {
                     <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('FivePlayers')}>
                         <Text style={styles.buttonText}>5 Players</Text>
                     </TouchableOpacity>
-
-
             </View>
-
-
-
       </View>
-
     );
   }
 }

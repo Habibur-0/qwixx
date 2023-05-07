@@ -16,9 +16,7 @@ import Player5 from './src/Screens/Player5';
 
 
 const Stack = createNativeStackNavigator();
-
 const Tab = createBottomTabNavigator();
-
 
 function App() {
   return (

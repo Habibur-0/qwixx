@@ -11,46 +11,86 @@ const colors = {
 };
 
 export default class QwixxBoard extends Component {
-  state = {
-    rows: [
-      { color: 'red', selectedNumbers: [], redCount: 0 },
-      { color: 'yellow', selectedNumbers: [], yellowCount: 0 },
-      { color: 'green', selectedNumbers: [], greenCount: 0 },
-      { color: 'blue', selectedNumbers: [], blueCount: 0 },
-    ],
-    moves: 0,
-    selectedCount: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: [
+        { color: 'red', selectedNumbers: [], redCount: 0 },
+        { color: 'yellow', selectedNumbers: [], yellowCount: 0 },
+        { color: 'green', selectedNumbers: [], greenCount: 0 },
+        { color: 'blue', selectedNumbers: [], blueCount: 0 },
+      ],
+      moves: 0,
+      selectedCount: 0,
+      lockStatuses: '',
 
-  // componentDidMount() {
-  //   const { lockStatuses } = this.props.route.params;
-  //   console.log(lockStatuses); // log the lock status array to the console
-  //   let endgame = 0;
-  //   console.log(endgame); // log the lock status array to the console
+    };
+  }
+  
+  componentDidMount() {
+      const lockStatuses = this.props.route.params?.lockStatuses;
+      console.log(lockStatuses); // log the lock status array to the console
+      // let endgame = 0;
+      // console.log(endgame); // log the lock status array to the console
 
-  //   const { navigation } = this.props;
+      this.setState({
+        lockStatuses,
+        lockStatuses: lockStatuses,
+      });
+
+      this.endGame(this.lockStatuses);
   
-  //   if(lockStatuses[0] === true){
-  //     this.handleLockPress(12, 0);
-  //     endgame++;
-  //   }
-  //   if (lockStatuses[1] === true){
-  //     this.handleLockPress(12, 1);
-  //     endgame++;
-  //   }
-  //   if (lockStatuses[2] === true){
-  //     this.handleLockPress(12, 2);
-  //     endgame++;
-  //   }
-  //   if (lockStatuses[3] === true){
-  //     this.handleLockPress(12, 3);
-  //     endgame++;
-  //   }
+      // const { navigation } = this.props;
   
-  //   if (endgame>=2){
-  //     navigation.navigate('End');
-  //   }
-  // }
+      // if (lockStatuses && lockStatuses[0] === true) {
+      //   this.handleLockPress(12, 0);
+      //   endgame++;
+      // }
+      // if (lockStatuses && lockStatuses[1] === true) {
+      //   this.handleLockPress(12, 1);
+      //   endgame++;
+      // }
+      // if (lockStatuses && lockStatuses[2] === true) {
+      //   this.handleLockPress(12, 2);
+      //   endgame++;
+      // }
+      // if (lockStatuses && lockStatuses[3] === true) {
+      //   this.handleLockPress(12, 3);
+      //   endgame++;
+      // }
+  
+      // if (endgame >= 2) {
+      //   navigation.navigate('End');
+      // }
+  }
+  
+
+   endGame(lockStatuses) {
+    let endgame = 0;
+    console.log(endgame); // log the lock status array to the console
+    const { navigation } = this.props;
+  
+    if (lockStatuses && lockStatuses[0] === true) {
+      this.handleLockPress(12, 0);
+      endgame++;
+    }
+    if (lockStatuses && lockStatuses[1] === true) {
+      this.handleLockPress(12, 1);
+      endgame++;
+    }
+    if (lockStatuses && lockStatuses[2] === true) {
+      this.handleLockPress(12, 2);
+      endgame++;
+    }
+    if (lockStatuses && lockStatuses[3] === true) {
+      this.handleLockPress(12, 3);
+      endgame++;
+    }
+
+    if (endgame >= 2) {
+      navigation.navigate('End');
+    }
+  }
 
   handleNumberPress = (number, rowIndex) => {
     if (this.state.selectedCount >= 2) {
@@ -95,14 +135,43 @@ export default class QwixxBoard extends Component {
 
   handleEndTurn = () => {
     const { navigation } = this.props;
+    const lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
+
+
     // Add 2 moves and reset selected count
     this.setState((prevState) => {
       return { selectedCount: 0, moves: prevState.moves + 2 };
     });
     
+    console.log(lockStatuses); // log the lock status array to the console
+    let endgame = 0;
+
+    if (lockStatuses && lockStatuses[0] === true) {
+      this.handleLockPress(12, 0);
+      endgame++;
+    }
+    if (lockStatuses && lockStatuses[1] === true) {
+      this.handleLockPress(12, 1);
+      endgame++;
+    }
+    if (lockStatuses && lockStatuses[2] === true) {
+      this.handleLockPress(12, 2);
+      endgame++;
+    }
+    if (lockStatuses && lockStatuses[3] === true) {
+      this.handleLockPress(12, 3);
+      endgame++;
+    }
+
+    console.log(endgame); // log the lock status array to the console
+
+    if (endgame === 2) {
+      navigation.navigate('End');
+    }
+
+
+
     // Construct an array of lock statuses for each row
-    const lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
-    
     navigation.navigate('Player2', { lockStatuses });
   };
   

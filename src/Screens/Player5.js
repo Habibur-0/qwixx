@@ -86,6 +86,7 @@ class DiceRow extends Component {
     );
   }
 }
+
 export default class QwixxBoard extends Component {
   state = {
     rows: [
@@ -97,6 +98,37 @@ export default class QwixxBoard extends Component {
     moves: 0,
     selectedCount: 0,
   };
+
+  componentDidMount() {
+    const { lockStatuses } = this.props.route.params;
+    console.log(lockStatuses); // log the lock status array to the console
+    let endgame = 0;
+    console.log(endgame); // log the lock status array to the console
+
+    const { navigation } = this.props;
+  
+    if(lockStatuses[0] === true){
+      this.handleLockPress(12, 0);
+      endgame++;
+    }
+    if (lockStatuses[1] === true){
+      this.handleLockPress(12, 1);
+      endgame++;
+    }
+    if (lockStatuses[2] === true){
+      this.handleLockPress(12, 2);
+      endgame++;
+    }
+    if (lockStatuses[3] === true){
+      this.handleLockPress(12, 3);
+      endgame++;
+    }
+  
+    if (endgame>=2){
+      navigation.navigate('End');
+    }
+  }
+
 
   handleNumberPress = (number, rowIndex) => {
     if (this.state.selectedCount >= 2) {
@@ -115,25 +147,25 @@ export default class QwixxBoard extends Component {
 
       const newSelectedCount = prevState.selectedCount + 1;
 
-            // Update count for red, yellow, green, blue
-            const { color } = newRows[rowIndex];
-            switch (color) {
-              case 'red':
-                newRows[rowIndex].redCount += 1;
-                break;
-              case 'yellow':
-                newRows[rowIndex].yellowCount += 1;
-                // newRows[rowIndex].yellowCount = newRows[rowIndex].selectedNumbers.length;
-                break;
-              case 'green':
-                newRows[rowIndex].greenCount += 1;
-                break;
-              case 'blue':
-                newRows[rowIndex].blueCount += 1;
-                break;
-              default:
-                break;
-            }
+                  // Update count for red, yellow, green, blue
+                  const { color } = newRows[rowIndex];
+                  switch (color) {
+                    case 'red':
+                      newRows[rowIndex].redCount += 1;
+                      break;
+                    case 'yellow':
+                      newRows[rowIndex].yellowCount += 1;
+                      // newRows[rowIndex].yellowCount = newRows[rowIndex].selectedNumbers.length;
+                      break;
+                    case 'green':
+                      newRows[rowIndex].greenCount += 1;
+                      break;
+                    case 'blue':
+                      newRows[rowIndex].blueCount += 1;
+                      break;
+                    default:
+                      break;
+                  }
 
       return { rows: newRows, selectedCount: newSelectedCount };
     });
@@ -207,10 +239,16 @@ export default class QwixxBoard extends Component {
   };
 
   handleEndTurn = () => {
+    const { navigation } = this.props;
     // Add 2 moves and reset selected count
     this.setState((prevState) => {
       return { selectedCount: 0, moves: prevState.moves + 2 };
     });
+    
+    // Construct an array of lock statuses for each row
+    const lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
+    
+    navigation.navigate('Player1', { lockStatuses });
   };
   
   render() {
@@ -222,6 +260,8 @@ export default class QwixxBoard extends Component {
     const blueScore = this.handleScore(rows[3].blueCount);
     const checkScore = this.handleCheckBoxes();
     const totalScore = redScore + yellowScore + greenScore + blueScore +checkScore;
+
+  
     return (
       <View style={styles.container}>
         {this.state.rows.map((row, index) => (
@@ -239,66 +279,66 @@ export default class QwixxBoard extends Component {
                 <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{row.color === 'red' || row.color === 'yellow' ? i + 2 : 12 - i}</Text>
               </TouchableOpacity>
             ))}
+
+
             <TouchableOpacity style={[styles.number, { backgroundColor: colors[row.color] }]}></TouchableOpacity>
-            <TouchableOpacity style={styles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
-              <FontAwesomeIcon icon={faLock} color="#000" size={60} />
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
+                <FontAwesomeIcon icon={faLock} color="#000" size={60} />
+              </TouchableOpacity>
           </View>
         ))}
         <View style = {styles.buttonRow}>
-          
           <TouchableOpacity style={styles.endTurnButton} onPress={this.handleEndTurn}>
             <Text style={styles.endTurnButtonText}>End Turn</Text>
           </TouchableOpacity>
 
           <Text style = {styles.score}>{totalScore}</Text>
 
+          <DiceRow />
 
-      <DiceRow />
-
-
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-        <CheckBox
-          checked={this.state.checkbox1}
-          onPress={() => this.setState({ checkbox1: this.state.checkbox1 ? true : !this.state.checkbox1 })}
-          checkedColor='#000'
-          uncheckedColor='#000'
-          checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
-          containerStyle={{ marginHorizontal: 0, padding: 0 }}    
-        />
-        <CheckBox
-          checked={this.state.checkbox2}
-          onPress={() => this.setState({ checkbox2: this.state.checkbox2 ? true : !this.state.checkbox2 })}
-          checkedColor='#000'
-          uncheckedColor='#000'
-          checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
-          containerStyle={{ marginHorizontal: 0, padding: 0 }}
-        />
-        <CheckBox
-          checked={this.state.checkbox3}
-          onPress={() => this.setState({ checkbox3: this.state.checkbox3 ? true : !this.state.checkbox3 })}
-          checkedColor='#000'
-          uncheckedColor='#000'
-          checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
-          containerStyle={{ marginHorizontal: 0, padding: 0 }}
-        />
-        <CheckBox
-          checked={this.state.checkbox4}
-          onPress={() => {
-            this.setState({ checkbox4: this.state.checkbox4 ? true : !this.state.checkbox4 });
-            navigation.navigate('End');
-          }}
-          
-          checkedColor='#000'
-          uncheckedColor='#000'
-          checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
-          containerStyle={{ marginHorizontal: 0, padding: 0 }}
-        />
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckBox
+                checked={this.state.checkbox1}
+                onPress={() => this.setState({ checkbox1: this.state.checkbox1 ? true : !this.state.checkbox1 })}
+                checkedColor='#000'
+                uncheckedColor='#000'
+                checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
+                containerStyle={{ marginHorizontal: 0, padding: 0 }}    
+              />
+              <CheckBox
+                checked={this.state.checkbox2}
+                onPress={() => this.setState({ checkbox2: this.state.checkbox2 ? true : !this.state.checkbox2 })}
+                checkedColor='#000'
+                uncheckedColor='#000'
+                checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
+                containerStyle={{ marginHorizontal: 0, padding: 0 }}
+              />
+              <CheckBox
+                checked={this.state.checkbox3}
+                onPress={() => this.setState({ checkbox3: this.state.checkbox3 ? true : !this.state.checkbox3 })}
+                checkedColor='#000'
+                uncheckedColor='#000'
+                checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
+                containerStyle={{ marginHorizontal: 0, padding: 0 }}
+              />
+              <CheckBox
+                checked={this.state.checkbox4}
+                onPress={() => {
+                  this.setState({ checkbox4: this.state.checkbox4 ? true : !this.state.checkbox4 });
+                  navigation.navigate('End');
+                }}
+                
+                checkedColor='#000'
+                uncheckedColor='#000'
+                checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
+                containerStyle={{ marginHorizontal: 0, padding: 0 }}
+              />
+            </View>
+        </View>
       </View>
-    </View>
-  </View>
-);
-}
+    );
+  }
+  
 }
 
 const styles = StyleSheet.create({

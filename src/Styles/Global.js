@@ -16,78 +16,132 @@ const styles = StyleSheet.create({
     borderBottomColor: 'gray',
     backgroundColor: '#3581D8',
   },
-  searchContainer: {
+  diceRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#128C7E',
-    // borderRadius: 40,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    padding: 15,
+    justifyContent: 'center',
+    marginTop: 5,
+    marginRight: 50,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 18,
-    color: 'white',
-    marginLeft: 10,
-    padding: 7,
+  dice: {
+    marginRight: 10,
   },
-  item: {
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  number: {
+    width: 50,
+    height: 50,
+    borderRadius: 9,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    },
+  lockIcon: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    // backgroundColor: '#red',
+    padding: 5,
+    borderRadius: 5,
+    },
+   yellowRow: {
+    backgroundColor: '#f7d511',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'black',
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  email: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#a3a3a3',
-  },
-  label: {
-    color: 'black',
-    fontWeight: 'bold',
-    // paddingLeft:30,
-    fontSize: 20,
-  },
-  input: {
-    height: 40,
-    width: '100%',
-    borderColor: 'black',
-    borderWidth: 4,
-    margin: 10,
-    padding: 20,
-    color: 'black',
-    borderRadius: 25, // change the value to adjust the roundness of the corners
-    fontSize: 25, // change the value to adjust the font size
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  greenRow: {
+    backgroundColor: '#28CC2D',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    flex: 1,
-    height: 50,
-    marginHorizontal: 10,
-    borderRadius: 30,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  redRow: {
+    backgroundColor: '#D82E3F',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#128C7E',
-  },
-  fourButton: {
-    flex: 1,
-    height: 50,
-    marginHorizontal: 4,
-    borderRadius: 30,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  blueRow: {
+    backgroundColor: '#3581D8',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    },
+  colorBox: {
+    backgroundColor: '#63CAD8',
+    height: '100%',
+    width: 70,
     justifyContent: 'center',
-    backgroundColor: '#128C7E',
-  },
+    alignItems: 'center',
+    borderRadius: 5,
+    },
+  dice: {
+      width: 50,
+      height: 50,
+      borderRadius: 9,
+      backgroundColor: '#ddd',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    diceValue: {
+      fontSize: 40,
+      fontWeight: 'bold',
+    },
+    redDice: {
+      backgroundColor: '#D82E3F',
+    },
+    yellowDice: {
+      backgroundColor: '#f7d511',
+    },
+    greenDice: {
+      backgroundColor: '#28CC2D',
+    },
+    blueDice: {
+      backgroundColor: '#1F8FFE',
+    },
+    whiteDice: {
+      backgroundColor: 'white',
+    },
+    diceContainer: {
+      marginRight: 5,
+      width: 50,
+    },
+    endTurnButton: {
+      backgroundColor: '#000',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      marginRight: 65,
+    },
+    endTurnButtonText: {
+      color: '#fff',
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    buttonRow: {
+      flexDirection: 'row',
+      // marginTop: 16,
+      alignItems: 'center',
+      justifyContent: 'flex-start', // Update this to 'flex-start'
+    },
+    score: {
+      fontSize: 50,
+      fontWeight: 'bold',
+      marginLeft: 'auto',
+      marginRight: 65,
+    },
 });
 
 export default styles;
