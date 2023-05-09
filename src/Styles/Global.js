@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
       paddingVertical: 12,
       paddingHorizontal: 20,
       borderRadius: 8,
-      marginRight: 65,
+      marginRight: 45,
     },
     endTurnButtonText: {
       color: '#fff',
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     score: {
       fontSize: 50,
       fontWeight: 'bold',
-      marginLeft: 'auto',
-      marginRight: 65,
+      // marginLeft: 'auto',
+      marginRight: 45,
     },
 });
 

@@ -25,6 +25,9 @@ export default class WelcomeScreen extends Component {
         </View>
 
             <View style={styles.ButtonLayout}>
+                    <TouchableOpacity style={styles.Button} >
+                        <Text style={styles.buttonText}>How to Play</Text>
+                    </TouchableOpacity>
                      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('TwoPlayers')}>
                         <Text style={styles.buttonText}>2 Players</Text>
                     </TouchableOpacity>

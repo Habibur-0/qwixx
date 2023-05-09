@@ -100,20 +100,34 @@ class DiceRow extends Component {
 }
 
 export default class QwixxBoard extends Component {
-  state = {
-    rows: [
-      { color: 'red', selectedNumbers: [], redCount: 0 },
-      { color: 'yellow', selectedNumbers: [], yellowCount: 0 },
-      { color: 'green', selectedNumbers: [], greenCount: 0 },
-      { color: 'blue', selectedNumbers: [], blueCount: 0 },
-    ],
-    moves: 0,
-    selectedCount: 0,
-    playerScores: this.props.route.params?.playerScores || [0,0,0,0,0],
-    lockStatuses: this.props.route.params?.lockStatuses || [false,false,false,false],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: [
+        { color: 'red', selectedNumbers: [], redCount: 0 },
+        { color: 'yellow', selectedNumbers: [], yellowCount: 0 },
+        { color: 'green', selectedNumbers: [], greenCount: 0 },
+        { color: 'blue', selectedNumbers: [], blueCount: 0 },
+      ],
+      moves: 0,
+      selectedCount: 0,
+      playerScores: this.props.route.params?.playerScores || [0,0,0,0,0],
+      lockStatuses: this.props.route.params?.lockStatuses || [false,false,false,false],
+    };
+  }
+  
 
   componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.Pass();
+    });
+  }
+  
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  Pass(){
     console.log('lockStatuses:', this.state.lockStatuses);
     for (let i = 0; i < this.state.lockStatuses.length; i++) {
       if (this.state.lockStatuses[i]) {
@@ -213,7 +227,7 @@ export default class QwixxBoard extends Component {
         (this.state.checkbox1 && this.state.checkbox2 && this.state.checkbox3 && this.state.checkbox4)) {
       navigation.navigate('End', { playerScores: this.state.playerScores });
     } else {
-      navigation.navigate('Player3', { playerScores: this.state.playerScores , lockStatuses: this.state.lockStatuses });
+      navigation.navigate('Player1', { playerScores: this.state.playerScores , lockStatuses: this.state.lockStatuses });
     }
   };
   

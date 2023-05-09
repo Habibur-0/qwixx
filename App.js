@@ -22,13 +22,15 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
+
       <Stack.Screen name="FivePlayers" component={FivePlayers} />
+
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
 
       <Stack.Screen name="End" component={EndScreen} />
 
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="ThreePlayers" component={ThreePlayers} />
-        <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
         <Stack.Screen name="FourPlayers" component={FourPlayers} />
         <Stack.Screen name="Main" component={MainScreen} />
       </Stack.Navigator>
