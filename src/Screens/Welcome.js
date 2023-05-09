@@ -17,7 +17,7 @@ export default class WelcomeScreen extends Component {
   render() {
     const { navigation } = this.props;
     return (
-      <View style={globalStyles.container}>
+      <View style={globalStyles.container1}>
 
         <View style={[globalStyles.header, styles.header]}>
           <Text style={styles.headerTitle}>Welcome </Text>

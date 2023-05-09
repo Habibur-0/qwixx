@@ -5,6 +5,10 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { faDice } from '@fortawesome/free-solid-svg-icons';
 import { CheckBox } from 'react-native-elements';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faUnlock } from '@fortawesome/free-solid-svg-icons';
+
+
+import globalStyles from '../styles/Global';
 
 const colors = {
   red: '#D82E3F',
@@ -32,26 +36,19 @@ class AnimatedDice extends Component {
     });
   };
 
-
   getDiceColor = () => {
     const { index } = this.props;
-    switch (index) {
-      case 0:
-        return styles.redDice;
-      case 1:
-        return styles.yellowDice;
-      case 2:
-        return styles.greenDice;
-      case 3:
-        return styles.blueDice;
-      case 4:
-      case 5:
-        return styles.whiteDice;
-      default:
-        return {};
-    }
+    const diceColors = [
+      globalStyles.redDice,
+      globalStyles.yellowDice,
+      globalStyles.greenDice,
+      globalStyles.blueDice,
+      globalStyles.whiteDice,
+      globalStyles.whiteDice
+    ];
+    return diceColors[index] || {};
   };
-
+  
   render() {
     const { rotation, value } = this.state;
     const animatedStyle = {
@@ -65,20 +62,20 @@ class AnimatedDice extends Component {
       ],
     };
     return (
-      <TouchableOpacity style={[styles.dice, this.getDiceColor()]} onPress={this.animateDice}>
+      <TouchableOpacity style={[globalStyles.dice, this.getDiceColor()]} onPress={this.animateDice}>
         <Animated.View style={[animatedStyle]}>
           <FontAwesomeIcon icon={faDice} size={30} color={'#000'} />
         </Animated.View>
-        <Text style={styles.value}>{value}</Text>
+        <Text style={globalStyles.value}>{value}</Text>
       </TouchableOpacity>
     );
   }
-}// end if diceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+}
 
 class DiceRow extends Component {
   render() {
     return (
-      <View style={styles.diceRow}>
+      <View style={globalStyles.diceRow}>
         {[...Array(6)].map((_, i) => (
           <AnimatedDice key={i} index={i} />
         ))}
@@ -100,76 +97,40 @@ export default class QwixxBoard extends Component {
   };
 
   componentDidMount() {
-    const { lockStatuses } = this.props.route.params;
-    console.log(lockStatuses); // log the lock status array to the console
-    let endgame = 0;
-    console.log(endgame); // log the lock status array to the console
 
-    const { navigation } = this.props;
-  
-    if(lockStatuses[0] === true){
-      this.handleLockPress(12, 0);
-      endgame++;
-    }
-    if (lockStatuses[1] === true){
-      this.handleLockPress(12, 1);
-      endgame++;
-    }
-    if (lockStatuses[2] === true){
-      this.handleLockPress(12, 2);
-      endgame++;
-    }
-    if (lockStatuses[3] === true){
-      this.handleLockPress(12, 3);
-      endgame++;
-    }
-  
-    if (endgame>=2){
-      navigation.navigate('End');
-    }
   }
-
-
   handleNumberPress = (number, rowIndex) => {
-    if (this.state.selectedCount >= 2) {
+    if (this.state.selectedCount >= 6) {
       return;
     }
     this.setState((prevState) => {
-      const newRows = [...prevState.rows];
-      const row = newRows[rowIndex];
-      row.selectedNumbers.push(number);
+      const { rows, selectedCount } = prevState;
+      const newRows = [...rows];
+      const { selectedNumbers, color } = newRows[rowIndex];
+      selectedNumbers.push(number);
       // Highlight numbers to the left in a different color
       for (let i = 0; i < number - 2; i++) {
-        row.selectedNumbers.push(i + 2);
+        selectedNumbers.push(i + 2);
       }
-
-      const newSelectedCount = prevState.selectedCount + 1;
-          // Update count for red, yellow, green, blue
-          const { color } = newRows[rowIndex];
-          switch (color) {
-            case 'red':
-              newRows[rowIndex].redCount += 1;
-              break;
-            case 'yellow':
-              newRows[rowIndex].yellowCount += 1;
-              // newRows[rowIndex].yellowCount = newRows[rowIndex].selectedNumbers.length;
-              break;
-            case 'green':
-              newRows[rowIndex].greenCount += 1;
-              break;
-            case 'blue':
-              newRows[rowIndex].blueCount += 1;
-              break;
-            default:
-              break;
-          }
+  
+      const newSelectedCount = selectedCount + 1;
+      // Update count for red, yellow, green, blue
+      newRows[rowIndex][`${color}Count`] += 1;
+  
       return { rows: newRows, selectedCount: newSelectedCount };
     });
   };
 
   handleLockPress = (number, rowIndex) => {
     this.setState((prevState) => {
-      const newRows = [...prevState.rows];
+      const { rows } = prevState;
+      const newRows = [...rows];
+      const { color } = newRows[rowIndex];
+  
+      if (newRows[rowIndex][`${color}Count`] < 5) {
+        return;
+      }
+  
       newRows[rowIndex].selectedNumbers.push(number);
       // Highlight numbers to the left in a different color
       for (let i = 0; i < number - 2; i++) {
@@ -178,7 +139,7 @@ export default class QwixxBoard extends Component {
       return { rows: newRows };
     });
   };
-
+  
    handleScore = (score) => {
     const scoreValues = [0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78];
     return scoreValues[score];
@@ -196,8 +157,6 @@ export default class QwixxBoard extends Component {
     return totalCheckScore;
   }
   
-  
-
   isNumberSelected = (number, rowIndex) => {
     return this.state.rows[rowIndex].selectedNumbers.includes(number);
   };
@@ -206,14 +165,20 @@ export default class QwixxBoard extends Component {
     const { navigation } = this.props;
     // Add 2 moves and reset selected count
     this.setState((prevState) => {
-      return { selectedCount: 0, moves: prevState.moves + 2 };
+      return { selectedCount: 0, moves: prevState.moves + 6 };
     });
-    
+  
     // Construct an array of lock statuses for each row
     const lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
     
-    navigation.navigate('Player3', { lockStatuses });
+    // Check if there are 2 or more 'true' values in lockStatuses
+    if (lockStatuses.filter(status => status === true).length >= 2) {
+      navigation.navigate('End');
+    } else {
+      navigation.navigate('Player3');
+    }
   };
+  
   
   render() {
     const { navigation } = this.props;
@@ -227,36 +192,37 @@ export default class QwixxBoard extends Component {
 
   
     return (
-      <View style={styles.container}>
+      <View style={globalStyles.container}>
         {this.state.rows.map((row, index) => (
-          <View key={index} style={[styles.row, styles[`${row.color}Row`]]}>
+          <View key={index} style={[globalStyles.row, globalStyles[`${row.color}Row`]]}>
             {[...Array(11)].map((_, i) => (
               <TouchableOpacity
                 key={i}
                 style={[
-                  styles.number,
-                  { backgroundColor: this.isNumberSelected(i + 2, index) ? '#000' : colors[row.color] },
+                  globalStyles.number,
+                  { backgroundColor: this.isNumberSelected(i + 2, index) ? '#fff' : colors[row.color] },
                 ]}
                 onPress={() => this.handleNumberPress(i + 2, index)}
-                disabled={this.state.selectedCount >= 2 && !this.isNumberSelected(i + 2, index)}
+                disabled={this.state.selectedCount >= 6 && !this.isNumberSelected(i + 2, index)}
               >
                 <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>{row.color === 'red' || row.color === 'yellow' ? i + 2 : 12 - i}</Text>
               </TouchableOpacity>
             ))}
 
 
-            <TouchableOpacity style={[styles.number, { backgroundColor: colors[row.color] }]}></TouchableOpacity>
-              <TouchableOpacity style={styles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
+            <TouchableOpacity style={[globalStyles.number, { backgroundColor: colors[row.color] }]}></TouchableOpacity>
+            
+              <TouchableOpacity style={globalStyles.lockIcon} onPress={() => this.handleLockPress(12, index)}>
                 <FontAwesomeIcon icon={faLock} color="#000" size={60} />
               </TouchableOpacity>
           </View>
         ))}
-        <View style = {styles.buttonRow}>
-          <TouchableOpacity style={styles.endTurnButton} onPress={this.handleEndTurn}>
-            <Text style={styles.endTurnButtonText}>End Turn</Text>
+        <View style = {globalStyles.buttonRow}>
+          <TouchableOpacity style={globalStyles.endTurnButton} onPress={this.handleEndTurn}>
+            <Text style={globalStyles.endTurnButtonText}>End Turn</Text>
           </TouchableOpacity>
 
-          <Text style = {styles.score}>{totalScore}</Text>
+          <Text style = {globalStyles.score}>{totalScore}</Text>
 
           <DiceRow />
 
@@ -303,142 +269,3 @@ export default class QwixxBoard extends Component {
   }
   
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'center',
-    backgroundColor: '#63CAD8', 
-  },
-  diceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginBottom: 5,
-    marginTop: 5,
-    marginRight: 50,
-
-  },
-  dice: {
-    marginRight: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    // marginBottom: 10,
-  },
-  number: {
-    width: 50,
-    height: 50,
-    borderRadius: 9,
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    },
-  lockIcon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    // backgroundColor: '#red',
-    padding: 5,
-    borderRadius: 5,
-    },
-   yellowRow: {
-    backgroundColor: '#f7d511',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    },
-  greenRow: {
-    backgroundColor: '#28CC2D',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    },
-  redRow: {
-    backgroundColor: '#D82E3F',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    },
-  blueRow: {
-    backgroundColor: '#3581D8',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    },
-  colorBox: {
-    backgroundColor: '#63CAD8',
-    height: '100%',
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    },
-  dice: {
-      width: 50,
-      height: 50,
-      borderRadius: 9,
-      backgroundColor: '#ddd',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    diceValue: {
-      fontSize: 40,
-      fontWeight: 'bold',
-    },
-    redDice: {
-      backgroundColor: '#D82E3F',
-    },
-    yellowDice: {
-      backgroundColor: '#f7d511',
-    },
-    greenDice: {
-      backgroundColor: '#28CC2D',
-    },
-    blueDice: {
-      backgroundColor: '#1F8FFE',
-    },
-    whiteDice: {
-      backgroundColor: 'white',
-    },
-    diceContainer: {
-      marginRight: 5,
-      width: 50,
-    },
-    endTurnButton: {
-      backgroundColor: '#000',
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 8,
-      marginRight: 65,
-    },
-    endTurnButtonText: {
-      color: '#fff',
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    buttonRow: {
-      flexDirection: 'row',
-      // marginTop: 16,
-      alignItems: 'center',
-      justifyContent: 'flex-start', // Update this to 'flex-start'
-    },
-    score: {
-      fontSize: 50,
-      fontWeight: 'bold',
-      marginLeft: 'auto',
-      marginRight: 65,
-    },
-
-  });

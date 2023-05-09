@@ -21,7 +21,7 @@ export default class EndScreen extends Component {
     const { navigation } = this.props;
 
     return (
-      <View style={globalStyles.container}>
+      <View style={globalStyles.container1}>
 
         <View style={[globalStyles.header, styles.header]}>
           <Text style={styles.headerTitle}>Game Over</Text>

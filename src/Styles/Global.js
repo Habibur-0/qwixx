@@ -2,9 +2,15 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 
-  container: {
+  container1: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  container: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'center',
+    backgroundColor: '#63CAD8', 
   },
   header: {
     flexDirection: 'row',
@@ -20,8 +26,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    // marginBottom: 5,
     marginTop: 5,
     marginRight: 50,
+
   },
   dice: {
     marginRight: 10,
@@ -134,7 +142,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       // marginTop: 16,
       alignItems: 'center',
-      justifyContent: 'flex-start', // Update this to 'flex-start'
+      justifyContent: 'flex-start', 
     },
     score: {
       fontSize: 50,
