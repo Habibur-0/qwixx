@@ -14,12 +14,20 @@ export default class EndScreen extends Component {
 
     this.state = {
       winner: '',
+      playerScores: this.props.route.params.playerScores // Initialize playerScores state with the prop from previous screen
     };
   }
 
   render() {
     const { navigation } = this.props;
+    const { playerScores } = this.state;
 
+    // Calculate the highest score and the winner
+    const maxScore = Math.max(...playerScores);
+    const winnerIndex = playerScores.indexOf(maxScore);
+    const winner = `Player ${winnerIndex + 1}`;
+
+    // Render the component with winner information and scores list
     return (
       <View style={globalStyles.container1}>
 
@@ -28,7 +36,12 @@ export default class EndScreen extends Component {
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.text}>The winner is: {this.state.winner}</Text>
+          <Text style={styles.text}>Congratulations: {winner}</Text>
+          {playerScores.map((score, index) => (
+            <Text key={index} style={styles.text}>
+              Player {index + 1}: {score}
+            </Text>
+          ))}
         </View>
 
         <View style={styles.ButtonLayout}>
@@ -51,7 +64,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     fontSize: 30,
-    color: 'white',
+    color:'black',
   },
   buttonText: {
     color: 'white',
@@ -77,5 +90,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop:150
   },
 });

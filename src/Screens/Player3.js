@@ -73,12 +73,28 @@ class AnimatedDice extends Component {
 }
 
 class DiceRow extends Component {
+  constructor(props) {
+    super(props);
+    this.diceRefs = Array(6).fill(0).map(() => React.createRef());
+  }
+  
+  rollAll = () => {
+    this.diceRefs.forEach(diceRef => {
+      diceRef.current.animateDice();
+    });
+  };
+
   render() {
     return (
       <View style={globalStyles.diceRow}>
         {[...Array(6)].map((_, i) => (
-          <AnimatedDice key={i} index={i} />
+          <AnimatedDice key={i} index={i} ref={this.diceRefs[i]} />
         ))}
+        <TouchableOpacity style={[globalStyles.dice, { backgroundColor: 'black' }]} onPress={this.rollAll}>
+          <Text style={[globalStyles.rollAllButtonText, { color: 'white' }]}>Roll All</Text>
+        </TouchableOpacity>
+
+
       </View>
     );
   }
@@ -94,11 +110,19 @@ export default class QwixxBoard extends Component {
     ],
     moves: 0,
     selectedCount: 0,
+    playerScores: this.props.route.params?.playerScores || [0,0,0,0,0],
+    lockStatuses: this.props.route.params?.lockStatuses || [false,false,false,false],
   };
 
   componentDidMount() {
-
+    console.log('lockStatuses:', this.state.lockStatuses);
+    for (let i = 0; i < this.state.lockStatuses.length; i++) {
+      if (this.state.lockStatuses[i]) {
+        this.passLockStatus(12, i);
+      }
+    }
   }
+  
   handleNumberPress = (number, rowIndex) => {
     if (this.state.selectedCount >= 6) {
       return;
@@ -130,7 +154,20 @@ export default class QwixxBoard extends Component {
       if (newRows[rowIndex][`${color}Count`] < 5) {
         return;
       }
-  
+      newRows[rowIndex].selectedNumbers.push(number);
+      // Highlight numbers to the left in a different color
+      for (let i = 0; i < number - 2; i++) {
+        newRows[rowIndex].selectedNumbers.push(i + 2);
+      }
+      return { rows: newRows };
+    });
+  };
+
+  passLockStatus = (number, rowIndex) => {
+    this.setState((prevState) => {
+      const { rows } = prevState;
+      const newRows = [...rows];
+
       newRows[rowIndex].selectedNumbers.push(number);
       // Highlight numbers to the left in a different color
       for (let i = 0; i < number - 2; i++) {
@@ -169,19 +206,19 @@ export default class QwixxBoard extends Component {
     });
   
     // Construct an array of lock statuses for each row
-    const lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
+    this.state.lockStatuses = this.state.rows.map(row => row.selectedNumbers.includes(12));
     
-    // Check if there are 2 or more 'true' values in lockStatuses
-    if (lockStatuses.filter(status => status === true).length >= 2) {
-      navigation.navigate('End');
+    // Check if there are 2 or more 'true' values in lockStatuses, or if all 4 checkboxes have been selected
+    if (this.state.lockStatuses.filter(status => status === true).length >= 2 || 
+        (this.state.checkbox1 && this.state.checkbox2 && this.state.checkbox3 && this.state.checkbox4)) {
+      navigation.navigate('End', { playerScores: this.state.playerScores });
     } else {
-      navigation.navigate('Player4');
+      navigation.navigate('Player4', { playerScores: this.state.playerScores , lockStatuses: this.state.lockStatuses });
     }
   };
   
   
   render() {
-    const { navigation } = this.props;
     const { rows } = this.state;
     const redScore = this.handleScore(rows[0].redCount);
     const yellowScore = this.handleScore(rows[1].yellowCount);
@@ -189,7 +226,7 @@ export default class QwixxBoard extends Component {
     const blueScore = this.handleScore(rows[3].blueCount);
     const checkScore = this.handleCheckBoxes();
     const totalScore = redScore + yellowScore + greenScore + blueScore +checkScore;
-
+    this.state.playerScores[2] = totalScore;
   
     return (
       <View style={globalStyles.container}>
@@ -253,10 +290,7 @@ export default class QwixxBoard extends Component {
               />
               <CheckBox
                 checked={this.state.checkbox4}
-                onPress={() => {
-                  this.setState({ checkbox4: this.state.checkbox4 ? true : !this.state.checkbox4 });
-                  navigation.navigate('End');
-                }}
+                onPress={() => this.setState({ checkbox4: this.state.checkbox4 ? true : !this.state.checkbox4 })}
                 checkedColor='#000'
                 uncheckedColor='#000'
                 checkedIcon={<FontAwesomeIcon icon={faTimes} size={18} color='#000' />}
