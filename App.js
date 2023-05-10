@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import WelcomeScreen from './src/Screens/Welcome';
-import MainScreen from './src/Screens/Main';
+import HowToPlayScreen from './src/Screens/HowToPlay';
 import EndScreen from './src/Screens/End';
 
 import Player1 from './src/Screens/Player1';
@@ -22,17 +22,20 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+
+      <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
+
+
       <Stack.Screen name="TwoPlayers" component={TwoPlayers} />
 
       <Stack.Screen name="FivePlayers" component={FivePlayers} />
 
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
 
       <Stack.Screen name="End" component={EndScreen} />
 
         <Stack.Screen name="ThreePlayers" component={ThreePlayers} />
         <Stack.Screen name="FourPlayers" component={FourPlayers} />
-        <Stack.Screen name="Main" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
