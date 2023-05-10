@@ -1,5 +1,4 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/destructuring-assignment */
+// Imports the necessary components and styles needed for a React Native screen.
 import React, { Component } from 'react';
 import {
   StyleSheet, Text, View, TouchableOpacity, Image, FlatList
@@ -7,6 +6,7 @@ import {
 
 import globalStyles from '../styles/Global';
 
+//loads the images and adds a comment to each one 
 const data = [
   { id: '1', image: require('../Images/Objective.jpg'), text: 'Score the most points by crossing out as many numbers in the four colour-rows as possible while avoiding penalty points.' },
   { id: '2', image: require('../Images/GamePlay.jpg'), text: 'The first player to roll a 6 takes on the role of "active player". The active player rolls all six dice. The following two actions are now carried out in order, always one after the other:' },
@@ -19,12 +19,7 @@ const data = [
 ];
 
 export default class WelcomeScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
+  //This function defines how to render each item in a list.
   renderItem = ({ item }) => (
     <View style={styles.item}>
       <Image style={styles.image} source={item.image} />
@@ -38,16 +33,20 @@ export default class WelcomeScreen extends Component {
     return (
       <View style={globalStyles.container1}>
 
+        {/* simple header that goes accross the screen */}
         <View style={[globalStyles.header, styles.header]}>
           <Text style={styles.headerTitle}>How to play </Text>
-          {/* <Text style={styles.headerTitle}>Qwixx</Text> */}
         </View>
+
+        {/* FlatList displays data with renderItem and unique keys using the style prop. */}
         <FlatList
           data={data}
           renderItem={this.renderItem}
           keyExtractor={(item) => item.id}
           style={styles.flatList}
         />
+
+        {/* simplete button to go back to the welcome screen */}
         <View style={styles.ButtonLayout}>
           <TouchableOpacity style={styles.Button} onPress={() => navigation.goBack()}>
             <Text style={styles.buttonText}>Back</Text>
@@ -75,7 +74,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 25,
     backgroundColor: '#63CAD8',
-    // width: '75%', // add this line to make the button take up full width of container
     textAlign: 'center',
     padding: 10,
     marginTop: 15,
@@ -83,7 +81,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   ButtonLayout:{
-    // alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 20,
   },

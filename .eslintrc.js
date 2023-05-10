@@ -14,7 +14,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    'react'rrrrrrrrrrrrrrr,
+    'react'r,
   ],
   rules: {
   },

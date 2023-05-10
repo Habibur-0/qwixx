@@ -1,3 +1,4 @@
+// Imports the necessary components and styles needed for a React Native screen.
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -14,6 +15,7 @@ export default class EndScreen extends Component {
 
     this.state = {
       winner: '',
+      //loads in the final player scores from the player that met the end conditions 
       playerScores: this.props.route.params.playerScores // Initialize playerScores state with the prop from previous screen
     };
   }
@@ -31,12 +33,14 @@ export default class EndScreen extends Component {
     return (
       <View style={globalStyles.container1}>
 
+        {/* simple head that goes accorss the top */}
         <View style={[globalStyles.header, styles.header]}>
           <Text style={styles.headerTitle}>Game Over</Text>
         </View>
 
         <View style={styles.content}>
           <Text style={styles.text}>Congratulations: {winner}</Text>
+          {/* loads each players scores  */}
           {playerScores.map((score, index) => (
             <Text key={index} style={styles.text}>
               Player {index + 1}: {score}
@@ -44,6 +48,7 @@ export default class EndScreen extends Component {
           ))}
         </View>
 
+        {/* button to go back to the welcome screen */}
         <View style={styles.ButtonLayout}>
           <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Welcome')}>
             <Text style={styles.buttonText}>Play Again</Text>

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     justifyContent: 'center',
-    backgroundColor: '#63CAD8', 
+    backgroundColor: '#63CAD8',
   },
   header: {
     flexDirection: 'row',
@@ -26,10 +26,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // marginBottom: 5,
     marginTop: 5,
     marginRight: 50,
-
   },
   dice: {
     marginRight: 10,
@@ -46,23 +44,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
-    },
+  },
   lockIcon: {
     position: 'absolute',
     top: 0,
     right: 0,
-    // backgroundColor: '#red',
     padding: 5,
     borderRadius: 5,
-    },
-   yellowRow: {
+  },
+  yellowRow: {
     backgroundColor: '#f7d511',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
     paddingVertical: 10,
-    },
+  },
   greenRow: {
     backgroundColor: '#28CC2D',
     flexDirection: 'row',
@@ -70,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 5,
     paddingVertical: 10,
-    },
+  },
   redRow: {
     backgroundColor: '#D82E3F',
     flexDirection: 'row',
@@ -78,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 5,
     paddingVertical: 10,
-    },
+  },
   blueRow: {
     backgroundColor: '#3581D8',
     flexDirection: 'row',
@@ -86,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 5,
     paddingVertical: 10,
-    },
+  },
   colorBox: {
     backgroundColor: '#63CAD8',
     height: '100%',
@@ -94,62 +91,62 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    },
+  },
   dice: {
-      width: 50,
-      height: 50,
-      borderRadius: 9,
-      backgroundColor: '#ddd',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    diceValue: {
-      fontSize: 40,
-      fontWeight: 'bold',
-    },
-    redDice: {
-      backgroundColor: '#D82E3F',
-    },
-    yellowDice: {
-      backgroundColor: '#f7d511',
-    },
-    greenDice: {
-      backgroundColor: '#28CC2D',
-    },
-    blueDice: {
-      backgroundColor: '#1F8FFE',
-    },
-    whiteDice: {
-      backgroundColor: 'white',
-    },
-    diceContainer: {
-      marginRight: 5,
-      width: 50,
-    },
-    endTurnButton: {
-      backgroundColor: '#000',
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 8,
-      marginRight: 45,
-    },
-    endTurnButtonText: {
-      color: '#fff',
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    buttonRow: {
-      flexDirection: 'row',
-      // marginTop: 16,
-      alignItems: 'center',
-      justifyContent: 'flex-start', 
-    },
-    score: {
-      fontSize: 50,
-      fontWeight: 'bold',
-      // marginLeft: 'auto',
-      marginRight: 45,
-    },
+    width: 50,
+    height: 50,
+    borderRadius: 9,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  diceValue: {
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
+  redDice: {
+    backgroundColor: '#D82E3F',
+  },
+  yellowDice: {
+    backgroundColor: '#f7d511',
+  },
+  greenDice: {
+    backgroundColor: '#28CC2D',
+  },
+  blueDice: {
+    backgroundColor: '#1F8FFE',
+  },
+  whiteDice: {
+    backgroundColor: 'white',
+  },
+  diceContainer: {
+    marginRight: 5,
+    width: 50,
+  },
+  endTurnButton: {
+    backgroundColor: '#000',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginRight: 45,
+  },
+  endTurnButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    // marginTop: 16,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  score: {
+    fontSize: 50,
+    fontWeight: 'bold',
+    // marginLeft: 'auto',
+    marginRight: 45,
+  },
 });
 
 export default styles;
